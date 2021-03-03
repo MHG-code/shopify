@@ -51,6 +51,28 @@ class Database extends \CodeIgniter\Database\Config
 		'port'     => 3306,
 	];
 
+	// public $default = [
+	// 	'DSN'      => '',
+	// 	'hostname' => 'localhost',
+	// 	'username' => 'id16262400_mhg',
+	// 	'password' => '|D4@kOv7k@Ta+yDh',
+	// 	'database' => 'id16262400_aq',
+	// 	'DBDriver' => 'MySQLi',
+	// 	'DBPrefix' => '',
+	// 	'pConnect' => false,
+	// 	'DBDebug'  => (ENVIRONMENT !== 'production'),
+	// 	'cacheOn'  => false,
+	// 	'cacheDir' => '',
+	// 	'charset'  => 'utf8',
+	// 	'DBCollat' => 'utf8_general_ci',
+	// 	'swapPre'  => '',
+	// 	'encrypt'  => false,
+	// 	'compress' => false,
+	// 	'strictOn' => TRUE,
+	// 	'failover' => [],
+	// 	'port'     => 3306,
+	// ];
+
 	/**
 	 * This database connection is used when
 	 * running PHPUnit database tests.

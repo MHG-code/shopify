@@ -1,244 +1,325 @@
-<?= $this->extend('customers/templates/base') ?>
 
-<?= $this->section('title') ?>
-  Home
-<?= $this->endSection() ?>
-
-
-<?= $this->section('styles') ?>
-body {
-    background-color: #eee
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        .overlay {
+  overflow-x: auto;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
 }
-@media (max-width: 768px) {
-    .carousel-inner .carousel-item > div {
-        display: none;
-    }
-    .carousel-inner .carousel-item > div:first-child {
-        display: block;
-    }
-}
-
-.carousel-inner .carousel-item.active,
-.carousel-inner .carousel-item-next,
-.carousel-inner .carousel-item-prev {
-    display: flex;
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
 }
 
-/* display 3 */
-@media (min-width: 768px) {
-    
-    .carousel-inner .carousel-item-right.active,
-    .carousel-inner .carousel-item-next {
-      transform: translateX(33.333%);
-    }
-    
-    .carousel-inner .carousel-item-left.active, 
-    .carousel-inner .carousel-item-prev {
-      transform: translateX(-33.333%);
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.0);
+  border-radius: 5px;
+  width: 40%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+@media(max-width:1000px) {
+    .popup {
+       width: 70%;
     }
 }
 
-.carousel-inner .carousel-item-right,
-.carousel-inner .carousel-item-left{ 
-  transform: translateX(0);
+@media(max-width:750px) {
+    .popup {
+       width: auto;
+    }
 }
 
-.carousel-item .card img{
-  width: 150px;
-  height: 150px;
-  position:relitive;
-  <!-- margin-left: 25%; -->
-  text-align: center !important;
-
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  cursor: pointer;
+  position: absolute;
+  top: -10px;
+  right: 5px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: orange;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
 }
 
-
-.off {
-    cursor: pointer;
-    position: absolute;
-    left: 80%;
-    top: 1%;
-    width: 80px;
-    text-align: center;
-    height: 30px;
-    line-height: 8px;
-    border-radius: 50px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff
+.input-group-btn-vertical {
+  position: relative;
+  white-space: nowrap;
+  width: 1%;
+  vertical-align: middle;
+  display: table-cell;
+}
+.input-group-btn-vertical > .btn {
+  display: block;
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  padding: 8px;
+  margin-left: -1px;
+  position: relative;
+  border-radius: 0;
+}
+.input-group-btn-vertical > .btn:first-child {
+  border-top-right-radius: 4px;
+}
+.input-group-btn-vertical > .btn:last-child {
+  margin-top: -2px;
+  border-bottom-right-radius: 4px;
+}
+.input-group-btn-vertical i{
+  position: absolute;
+  top: 0;
+  left: 4px;
 }
 
-.buy-now:focus {
-    box-shadow: none
+.cart-items{
+  padding: 20px;
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
-
-.buy-now:hover {
-    color: #fff;
-    <!-- background-color: #e84040 !important; -->
-    border-color: #e84040 !important
+.cart-items .action{
+  align-content: center;
+  margin-top: 10px;
 }
+/*.cart-items .action .remove{
+ margin-left: 25px;
+}*/
+.total-detail{
+  position: sticky;
+}
+</style>
+</head>
+<body>
+    <div id="popup1" class="overlay">
+      <div class="popup">
+        <div class="container-fluid">
+          <h2>Selected Items</h2>
+          <div class="card">
+            <a class="close" href="#">×</a>
+            <div class="cart-items">
+                  
+            </div>
 
-
-<?= $this->endSection() ?>
-
-<?= $this->section('body') ?>
-  <!-- items list -->
-   <?php foreach ($categories as $catgory): ?>
-    <?php $active = 1; ?>
-    <h3><?= $catgory['categories'] ?></h3>
-    <div class="container text-center my-3">
-      <div class="row mx-auto my-auto">
-          <div id="<?= $catgory['_id'] ?>" class="carousel slide w-100" data-ride="carousel">
-              <div class="carousel-inner w-100" role="listbox">
-                
-                <?php foreach ($items['items'] as $item => $i): ?>
-                  <?php if ($catgory['categories'] === $i['categories']){?>
-                      <?php if ($active === 1 ){ ?>
-                        <div class="carousel-item active">
-                          <div class="col-md-4 text-center">
-                              <div class="card card-body">
-                                <span class="off bg-success">-<?= $i['discount']?>% OFF</span>
-                                <img class="mx-auto d-block" src="<?= base_url('uploads/items/'.$i['src']) ?>">
-                                <div class="about-product text-center">
-                                    <h3><?= $i['title']; ?></h3>
-
-                                    <h5><?= number_to_currency($i['price'], 'PKR'); ?></h5>
-                                    <button class="btn btn-success buy-now">Buy Now</button>
-                                </div>
-                              </div>
-                          </div>
-                      </div>
-                      <?php $active = 0; }  else{ ?>
-                      <div class="carousel-item">
-                          <div class="col-md-4 text-center">
-                              <div class="card card-body">
-                                <span class="off bg-success">-<?= $i['discount']?>% OFF</span>
-                                 <img class="mx-auto d-block" src="<?= base_url('uploads/items/'.$i['src']) ?>">
-                                 <div class="about-product text-center">
-                                    <h3><?= $i['title']; ?></h3>
-
-                                    <h5><?= number_to_currency($i['price'], 'PKR'); ?></h5>
-                                    <button class="btn btn-success buy-now">Buy Now</button>
-                                </div>
-                              </div>
-                          </div>
-                      </div>
-                    <?php }}endforeach; ?>
-              </div>
-              <a class="carousel-control-prev w-auto" href="#<?= $catgory['_id'] ?>" role="button" data-slide="prev">
-                  <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                  <span class="sr-only">Previous</span>
-              </a>
-              <a class="carousel-control-next w-auto" href="#<?= $catgory['_id'] ?>" role="button" data-slide="next">
-                  <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                  <span class="sr-only">Next</span>
-              </a>
-          </div>
-      </div>
+            </div>
+              <div class="d-flex  bg-dark text-white p-2">
+                 <table class="table table-dark total-detail">
+                    <thead>
+                      <tr class="total-amount">
+                        <th class="border-0 text-uppercase small font-weight-bold">Total Amount</th> <td id="total"> </td>
+                      </tr>
+                      <tr class="discount">
+                          <th class="border-0 text-uppercase small font-weight-bold">Discount</th> <td id="discount"></td>
+                      </tr>
+                      <tr class="grand-total">
+                        <th class="border-0 text-uppercase small font-weight-bold">Grand Total</th> <td id="grand-total"></td>
+                      </tr>
+                      <tr class="text-center">
+                          <th class="border-0 text-uppercase small font-weight-bold"><a href="<?= base_url('order_book') ?>" class="btn btn-success order_book">Book Order</a></th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+          </div>                   
     </div>
-   <?php endforeach; ?>
-<!-- pup up -->
-<div id="popUP_window">
-  
+  </div>
 </div>
-
-<?= $this->endSection() ?>
-
-<?= $this->section('script') ?>
-
-$(document).ready(function()
+</body>
+<script type="text/javascript">
+  $(document).ready(function()
     {
-      <!-- for list slider -->
-      item_slider();
-       <!-- end for list slider  -->
-        <!-- window.localStorage.clear(); -->
+      $('.cart-items').on('click','.increment', function() {
+        var id = $(this).data("id");
+        
+        $('.'+id+' input').val(parseInt($('.'+id+' input').val(), 10) + 1)
+        var quantity = $('.'+id+' input').val();
+        edit(id, quantity);
+  });
+  $('.cart-items').on('click','.decrement',function() {
+    var id = $(this).data("id");
+    var quantity = $('.'+id+' input').val();
+    if (quantity > 1) {
+      $('.'+id+' input').val(parseInt($('.'+id+' input').val(), 10) - 1)
+    quantity = $('.'+id+' input').val();
+
+      edit(id, quantity);
+  }
+    
+  });
         let products = [];
-        for (i = 0; i < localStorage.length; i++)
+        PopUp();
+
+      $(".close").click(function(){
+        popUpClose();
+       })
+
+  $( ".cart-items" ).on('change','input',function(){
+    var id = $(this).data("id");
+    var quantity = this.value;
+    edit(id, quantity);
+      });
+
+  $( ".cart-items" ).on('click','.remove',function(){
+
+    var item_id = this.value;
+    removeItem(item_id);
+      });
+
+// ........................................................ Functions
+  // Show data in table
+  
+
+  async function DataShow()
+  {
+    for (i = 0; i < localStorage.length; i++)
          {
           x = localStorage.key(i);
-
-          // console.log(JSON.parse(localStorage.getItem(x)))
           if(x[0] == 'm' && x[1] == 'h' && x[2] == 'g')
           {
-          console.log(x)
+            item = await JSON.parse(localStorage.getItem([x]))
+            var total = item['price']*item['quantity'];
+            total = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+            var html = '<div class="row">'
+                          +'<div class="col-4 col-md-6 col-lg-6 col-xl-6 img">'
+                              +'<img src="<?= base_url() ?>/uploads/items/'+item['image']+'" width="50" height="50" >'
+                            +'</div>'
+
+                            +'<div class="col-8 col-md-6 col-lg-6 col-xl-6 about">'
+                              +'<h5 id="title">'+item['title']+'</h5>'
+                              +'<h6 id="price">'+total+'</h6>'
+                            +'</div>'
+
+                            +'<div class="row action">'
+                              +'<div class="col-5">'
+                                +'<div class="input-group spinner '+item['_id']+'">'
+                                  +'<div class="input">'
+                                    +'<input data-id="'+item['_id']+'" type="number" value="'+item['quantity']+'" class="form-control text-center quantity-change" min="1" max="10" step="1"/>'
+                                  +'</div>'
+                                  +'<div class="input-group-btn-vertical">'
+                                    +'<button class="btn btn-default increment" type="button" data-id="'+item['_id']+'"><i class="fa fa-caret-up"></i></button>'
+                                    +'<button class="btn btn-default decrement" type="button" data-id="'+item['_id']+'"><i class="fa fa-caret-down"></i></button>'
+                                  +'</div>'
+                                +'</div>'
+                              +'</div>'
+
+                              // +'<div class="col-5">'
+                              //   +'<button class="btn btn-danger remove" value="'+item['_id']+'">X</button>'
+                              // +'</div>'
+                            +'</div>'
+                            
+            $(".cart-items").append(html)
+
+            if (i < localStorage.length-2) { $(".cart-items").append('<hr>')}
+           
           }
         }
+  }
 
-      $('.add-cart').click(async function()
-      { 
-        var title = $(this).data("title");
-        var src = $(this).data("src");
-        var price = $(this).data("price");
-        var discount = $(this).data("discount");
-        var item_id = $(this).data("id");
-        var quantity = $(this).data("quantity");
-        // var discount_value = discount% (* price)
-        var total = price - ( price*discount/100 )
+  async function PopUp()
+  {
+          $('#popup1').css("visibility", "visible"); 
+          $('#popup1').css("opacity", 1);
+          $('body').css("overflow-y" , "hidden");
+          $('.navbar').css("position", 'static');
+          $('.pager').css("visibility", "hidden");
+          
+  
 
-        var item = await JSON.parse(localStorage.getItem(['mhg',item_id]))
-        if(item)
-        {
-            quantity = item['quantity']+1   
-        }
-   
-        products = await ({'_id' : item_id , 'image' : src , 'price':price , 'discount':discount,'total':total , 'title':title, 'quantity':quantity});
-        await localStorage.setItem(['mhg',item_id] , JSON.stringify(products));
-        cart();
-      });
+         await DataShow();
+          total();
+  }
+  
+  async function update()
+  {
+    $(".cart-items").html("");
+    await DataShow();
+    total();
+  }
 
-      $('.detail').click(async function(){
-
-        var item_id = $(this).data("id");
-        $.ajax({
-              url: '<?= base_url("item_detail")  ?>',
-              type: 'GET',
-              data: {id:item_id},
-              success: function(data) {
-                 $('#popUP_window').html(data);
-              }   
-        });
-      });
-
-      $('#cart_basket').click(function(){
-        cart();
-      })
-      // ------------------------------------------------ Functions
-
-      function cart()
-      {
-         $.ajax({
-              url: '<?= base_url("add_cart")  ?>',
-              type: 'GET',
-              success: function(data) {
-                 $('#popUP_window').html(data);
-              }   
-        });
-      }
-
-      function item_slider()
-      {
-        
-        $('.carousel .carousel-item').each(function(){
-            var minPerSlide = 3;
-            var next = $(this).next();
-            if (!next.length) {
-            next = $(this).siblings(':first');
-            }
-            next.children(':first-child').clone().appendTo($(this));
-            
-            for (var i=0;i<minPerSlide;i++) {
-                next=next.next();
-                if (!next.length) {
-                  next = $(this).siblings(':first');
-                } 
-                next.children(':first-child').clone().appendTo($(this));
-              }
-        });
-      }
-    });
-
-<?= $this->endSection() ?>
+  async function popUpClose()
+  {
+    $('.navbar').css("position", 'sticky');
+    $('body').css("overflow-y" , "auto");
+    $('.pager').css("visibility", "visible");
+    $('#popup1').remove();
     
+    base_window_reload();
+  }
+
+  async function base_window_reload()
+      {
+        var location = <?php base_url('customers/templates/base') ?>
+        window.location.reload()
+      }
+
+  async function removeItem(item_id)
+  {
+    window.localStorage.removeItem(['mhg',item_id]);
+    update();
+  }
+
+  async function edit(id , quantity)
+  {
+    var item = await JSON.parse(localStorage.getItem(['mhg',id]))
+    item['quantity'] = quantity;
+    window.localStorage.removeItem(['mhg',id]);
+    await localStorage.setItem(['mhg',id], JSON.stringify(item));
+    update();
+  }
+
+  async function total()
+  {
+    var sub_total = 0;
+    var grand_total = 0;
+    var discount = 0;
+    for (i = 0; i < localStorage.length; i++)
+         {
+          x = localStorage.key(i);
+         if(x[0] == 'm' && x[1] == 'h' && x[2] == 'g')
+          {
+            item = await JSON.parse(localStorage.getItem([x]))
+            sub_total = (item['price']*item['quantity'])+sub_total;
+            grand_total = (item['total']*item['quantity'])+grand_total;
+          }
+        }
+        discount = ((grand_total/sub_total)*100)
+        discount = 100-discount
+
+        sub_total = sub_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        grand_total = grand_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
+        $("#table_total_data").html('<tr> <td>'+sub_total+'</td> <td>'+discount.toFixed(2)+'%</td> <td>'+grand_total+'</td></tr>')
+        $('.total-detail .total-amount #total').html(''+sub_total+'')
+        $('.total-detail .discount #discount').html(''+discount.toFixed(2)+' %')
+        $('.total-detail .grand-total #grand-total').html(''+grand_total+'')
+
+
+
+  }
+    });
+</script>
+</html>

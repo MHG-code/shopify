@@ -28,7 +28,7 @@ body {
 }
 
 /* display 3 */
-@media (min-width: 768px) {
+@media (min-width: 360px) {
     
     .carousel-inner .carousel-item-right.active,
     .carousel-inner .carousel-item-next {
@@ -126,6 +126,9 @@ cursor: zoom-in;
   text-transform: capitalize;
   font-weight: bold;
 }
+.controls-top{
+  position: sticky;
+}
 <?= $this->endSection() ?>
 
 <?= $this->section('body') ?>
@@ -147,7 +150,7 @@ cursor: zoom-in;
                   <?php if ($catgory['categories'] === $i['categories']){?>
                       <?php if ($a === 1 ){ ?>
                       <div class="carousel-item active">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-4">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-4">
                           <div class="d-flex justify-content-center">
                             <div class="card text-center">
                               <a class="detail" id="detail" data-title="<?= $i['title']; ?>"
@@ -176,11 +179,11 @@ cursor: zoom-in;
 
                                 <div class="text-center buy-btn">
                                   <button class="btn btn-success buy-now add-cart" id="add-cart"
-                                data-title="<?= $item['title']; ?>"
-                                data-src="<?= $item['src'] ?>"
-                                data-price="<?= $item['price'] ?>"
-                                data-discount="<?= $item['discount'] ?>"
-                                data-id="<?= $item['_id'] ?>"
+                                data-title="<?= $i['title']; ?>"
+                                data-src="<?= $i['src'] ?>"
+                                data-price="<?= $i['price'] ?>"
+                                data-discount="<?= $i['discount'] ?>"
+                                data-id="<?= $i['_id'] ?>"
                                 data-quantity="1">Buy Now</button>
                                 </div>
                               </div>
@@ -190,7 +193,7 @@ cursor: zoom-in;
                       </div>
                       <?php $a = 0; }  else{ ?>
                       <div class="carousel-item">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-4">
                           <div class="d-flex justify-content-center">
                             <div class="card text-center">
                               <a class="detail" id="detail" data-title="<?= $i['title']; ?>"
@@ -233,16 +236,12 @@ cursor: zoom-in;
                       </div>
                     <?php }}endforeach; ?>
               </div>
-              <div>
-                 <a class="left  carousel-control-prev w-auto" href="#<?= $catgory['_id'] ?>" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                    
-                </a>
-                <a class="carousel-control-next w-auto" href="#<?= $catgory['_id'] ?>" role="button" data-slide="next">
-                 
-                    <span class="carousel-control-next-icon bg-dark border border-dark rounded-circle" aria-hidden="true"></span>
-                </a> 
+
+              <div class="controls-top p-3">
+                <a class="btn-floating" href="#<?= $catgory['_id'] ?>" data-slide="prev"><i class="carousel-control-prev-icon bg-dark border border-dark rounded-circle"></i></a>
+                <a class="btn-floating" href="#<?= $catgory['_id'] ?>" data-slide="next"><i class="carousel-control-next-icon bg-dark border border-dark rounded-circle"></i></a>
               </div>
+
           </div>
       </div>
     </div>
