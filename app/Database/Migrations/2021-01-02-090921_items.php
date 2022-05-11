@@ -28,7 +28,7 @@ class Items extends Migration
                         'discount' => [
                                                                 'type'       => 'INT',
                                                                 'constraint' => 5,
-                                                                'null'       => true
+                                                                'null'       => false
                                                         ],
 			'description' => [
 								'type'       => 'TEXT',
@@ -41,10 +41,15 @@ class Items extends Migration
                                                                 'unsigned'       => true,
                                                                 'null'       => false,
                                                         ],
-                        'brand_id' => [
+                        // 'brand_id' => [
+                        //                                         'type'       => 'INT',
+                        //                                         'constraint' => 5,
+                        //                                         'unsigned'       => true,
+                        //                                         'null'       => false
+                        //                                 ],
+                        'main_page' => [
                                                                 'type'       => 'INT',
                                                                 'constraint' => 5,
-                                                                'unsigned'       => true,
                                                                 'null'       => false
                                                         ],
                         'availability' => [
@@ -67,7 +72,7 @@ class Items extends Migration
                 ]);
                 $this->forge->addKey('_id', true);
                 $this->forge->addForeignKey('category_id', 'category', '_id' , 'CASCADE' , 'CASCADE');
-                $this->forge->addForeignKey('brand_id', 'brands', '_id' , 'CASCADE' , 'CASCADE');
+                // $this->forge->addForeignKey('brand_id', 'brands', '_id' , 'CASCADE' , 'CASCADE');
                 $this->forge->createTable('items');
                 $this->db->enableForeignKeyChecks();
         }

@@ -2,24 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style type="text/css">
-        .overlay {
-  overflow-x: auto;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  transition: opacity 500ms;
-  visibility: hidden;
-  opacity: 0;
-}
-.overlay:target {
-  visibility: visible;
-  opacity: 1;
-}
+ <link rel="stylesheet" type="text/css" href="<?= base_url() ?>/assets/styles/popup.css">   
+ <link rel="stylesheet" type="text/css" href="<?= base_url() ?>/assets/styles/cart_items.css">   
 
+<style type="text/css">
 .popup {
   margin: 70px auto;
   padding: 20px;
@@ -42,11 +28,7 @@
     }
 }
 
-.popup h2 {
-  margin-top: 0;
-  color: #333;
-  font-family: Tahoma, Arial, sans-serif;
-}
+
 .popup .close {
   cursor: pointer;
   position: absolute;
@@ -58,76 +40,13 @@
   text-decoration: none;
   color: #333;
 }
-.popup .close:hover {
-  color: orange;
-}
+
 .popup .content {
   max-height: 30%;
   overflow: auto;
 }
 
-.input-group-btn-vertical {
-  position: relative;
-  white-space: nowrap;
-  width: 1%;
-  vertical-align: middle;
-  display: table-cell;
-}
-.input-group-btn-vertical > .btn {
-  display: block;
-  float: none;
-  width: 100%;
-  max-width: 100%;
-  padding: 8px;
-  margin-left: -1px;
-  position: relative;
-  border-radius: 0;
-}
-.input-group-btn-vertical > .btn:first-child {
-  border-top-right-radius: 4px;
-}
-.input-group-btn-vertical > .btn:last-child {
-  margin-top: -2px;
-  border-bottom-right-radius: 4px;
-}
-.input-group-btn-vertical i{
-  position: absolute;
-  top: 0;
-  left: 4px;
-}
 
-.cart-items{
-  padding: 20px;
-  max-height: 250px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.cart-items img{
-  width: 85px;
-  height: 85px;
-}
-.cart-items .input-group{
-  top: 15px;
-}
-.cart-items .input-group input{
-  width: 50px;
-}
-.cart-items .about{
-  margin-top: 15px;
-}
-.total-detail{
-  position: sticky;
-}
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
 </style>
 </head>
 <body>
@@ -136,7 +55,7 @@ input[type=number] {
         <div class="container-fluid">
           <h2>Selected Items</h2>
           <div class="card">
-            <a class="close" href="#">×</a>
+            <a class="close">×</a>
             <div class="cart-items">
                   
             </div>
@@ -164,6 +83,7 @@ input[type=number] {
     </div>
   </div>
 </div>
+
 </body>
 <script type="text/javascript">
   $(document).ready(function()
@@ -211,6 +131,7 @@ input[type=number] {
 
   async function DataShow()
   {
+    cart_items()
     for (i = 0; i < localStorage.length; i++)
          {
           x = localStorage.key(i);
@@ -254,9 +175,9 @@ input[type=number] {
                           +'</div>'
                         +'</div>'
                             
-            $(".cart-items").append(html)
-
-            if (i < localStorage.length-2) { $(".cart-items").append('<hr>')}
+            $(".cart_box").append(html)
+              
+            if (i < items+1) { $(".cart_box").append('<hr>')}
            
           }
         }
@@ -267,7 +188,7 @@ input[type=number] {
           $('#popup1').css("visibility", "visible"); 
           $('#popup1').css("opacity", 1);
           $('body').css("overflow-y" , "hidden");
-          $('.navbar').css("position", 'static');
+          $('header').css("position", 'static');
           $('.pager').css("visibility", "hidden");
           $('.list').css("position", "sticky");
 
@@ -287,20 +208,14 @@ input[type=number] {
 
   async function popUpClose()
   {
-    $('.navbar').css("position", 'sticky');
+    $('header').css("position", 'sticky');
     $('body').css("overflow-y" , "auto");
     $('.pager').css("visibility", "visible");
     $('.list').css("position", "relative");
-    $('#popup1').remove();
-    
-    base_window_reload();
+    $('#popup1').remove();   
+      cart_items()
+      document.getElementById("cart_basket").innerHTML = '<i class="fa fa-shopping-cart text-dark" aria-hidden="true"><small>'+items+'</small></i>'; 
   }
-
-  async function base_window_reload()
-      {
-        var location = <?php base_url('customers/templates/base') ?>
-        window.location.reload()
-      }
 
   async function removeItem(item_id)
   {
@@ -341,8 +256,6 @@ input[type=number] {
         $('.total-detail .total-amount #total').html(''+sub_total+'')
         $('.total-detail .discount #discount').html(''+discount.toFixed(2)+' %')
         $('.total-detail .grand-total #grand-total').html(''+grand_total+'')
-
-
 
   }
     });

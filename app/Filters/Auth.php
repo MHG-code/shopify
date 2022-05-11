@@ -9,8 +9,10 @@ class Auth implements FilterInterface
 
 	public function before(RequestInterface $request, $arguments = null)
 	{
+		
 		$this->session = \Config\Services::session();
-
+		dd($this->session->get('id'));
+				exit();
 		if ($this->session->has('id')) {
 			return;
 		}

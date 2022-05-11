@@ -1,25 +1,50 @@
 <?php namespace App\Controllers;
 use App\Models\Items;
+use App\Models\Category;
+use App\Models\CustomersModel;
+use App\Models\Orders;
+use App\Models\Images;
+use App\Models\My_Profile;
+
+$pager = \Config\Services::pager();
 
 class Testing extends \CodeIgniter\Controller
 {
-	protected $item;
-	public function __construct()
-	{
-     	$this->item = new Items();
-     
-		helper(['form', 'url']);
-	}
-        public function index()
-        {
-            $string = "Hamza/_.";
-             $string = str_replace([' ','+','/','_','*','&','%','$','#','@','(',')','-','[',']','{','}'], '', $string); // Replaces all spaces with hyphens.
+	protected $customer;
+    protected $order;
+    protected $item;
+    protected $image;
+    protected $category;
+    protected $profile;
 
-            // $string =  preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-            dd($string);
-            exit();
-        	return view('testing');
-        }
+	public function __construct()
+    {
+        $this->customer = new CustomersModel();
+        $this->order = new Orders();
+        $this->item = new Items();
+        $this->image = new Images();
+        $this->category = new Category();
+        $this->profile = new My_Profile();
+
+        helper(['form', 'url']);
+    }
+
+        public function index()
+    {
+       return('Hamza');
+    }
+
+
+    public function base()
+    {
+        $categories = $this->category->find();
+        $prof = $this->profile->first();
+        $data = [
+            'profile' => $prof,
+            'categories' => $categories
+        ]; 
+        return $data;           
+    }
 
          public function searching()
         {

@@ -30,6 +30,7 @@ class Admin extends BaseController
      	$this->profile = new My_Profile();
 
 		helper(['form', 'url']);
+
 	}
 	// ...........................................................................................
 
@@ -56,75 +57,76 @@ class Admin extends BaseController
 	}
 		return view('admin/myProfile');
 	}
+	// .......................................................................................
 
+	public function add_catg()
+	{
+		$req = $this->request->getVar();
+
+		if ($req['catg'] != '')
+				 {
+
+				 	$category = strtolower($req['catg']);
+
+					$catg_id =  $this->catg->where('categories' , $category)->first();
+
+					if (!$catg_id) {
+						$data = [
+							'categories'  => $category,
+							'description'  => $req['description'],
+						];
+						$this->catg->insert($data);
+						return 1;
+					}
+					else{
+						$this->response->setStatusCode(400);
+					
+						return  json_encode('Error: category alreday exist...!');
+					}
+				}
+	}
 	// .......................................................................................
 	public  function add_items()
 	{
 		$msg = 'failed';
+		$req = $this->request->getVar();
 
 		if ($this->request->isAJAX()){
 
 				// if category new
-				if ($this->request->getVar("new_category") != '')
+				if ($req["category"] != '')
 				 {
-				 	$category = strtolower($this->request->getVar("new_category"));
-
+				 	$category = strtolower($req['category']);
 					$catg_id =  $this->catg->where('categories' , $category)->first();
-
 					$catg_id = $catg_id['_id'];
-					
-					if (!$catg_id) {
-						$data = [
-								'categories'  => $category,
-							];
-					
-					$catg_id =  $this->catg->insert($data);
-					}
 				}
-				//if old category
-				//code
-
-				// if new Brand
-				if ($this->request->getVar("new_brand") != '')
-				 {
-				 	$brand_name = strtolower($this->request->getVar("new_brand"));
-				 	$msg = $brand_name;
-
-					$brand_id =  $this->brand->where('brand_name' , $brand_name)->first();
-
-					$brand_id = $brand_id['_id'];
-					
-					if (!$brand_id) {
-						$data = [
-								'brand_name'  => $brand_name,
-							];
-					
-					$brand_id =  $this->brand->insert($data);
-					}
-				}
-				//if old Brand
-				//code
-
+				
 				//check title and and items
-				$title = strtolower($this->request->getVar("title"));
+				$title = strtolower($req["title"]);
 
-				$item_id = $this->item->where('category_id' , $catg_id)->where('title' , $title)->where('brand_id' , $brand_id)->first();
+				$item_id = $this->item->where('category_id' , $catg_id)->where('title' , $title)->first();
 				if (!$item_id) {
+
 					$new_item  = [
 								'title'  => $title,
-								'price'  => $this->request->getVar("price"),
-								'discount'  => $this->request->getVar("discount"),		
-								'description'  => $this->request->getVar("description"),
+								'price'  => $req["price"],
+								'discount'  => $req["discount"],		
+								'description'  => $req["description"],
 								'category_id' => $catg_id,
-								'brand_id' => $brand_id,
+								// 'brand_id' => 1,
+								'main_page' => $req["on_main_page"],
 								'availability'=> 1
 
 				];
-				$item_id =  $this->item->insert($new_item);
 
-				// // images upload and save after add
-				$unique = $this->unique_time();
+				$item_id =  $this->item->insert($new_item);
+				// dd("here");
+				// exit();
+
+				// images upload and save after add
+				// $unique = $this->unique_time();
 				$main = 1;
+
 				if ($this->request->getFileMultiple('upload_files')) {
 		             foreach($this->request->getFileMultiple('upload_files') as $file)
 		             {
@@ -133,20 +135,22 @@ class Admin extends BaseController
 
 		              $img_detail = [
 		              	// 'src' => $file->getName(),
-		                'src' =>  $unique.$src,
+		                // 'src' =>  $unique.$src,
+		                'src' =>  $src,
+
 		                'item_id' => $item_id,
 		                'status' => 1,
 		                'main' => $main
 		                // 'type'  => $file->getClientMimeType()
 		              ];
 		              
-		              	// $test.append($img_detail);
+		              
 						$this->image->insert($img_detail);
 						// $file->move(WRITEPATH . 'uploads' , $img_detail['src']);
 						$file->move('../public/uploads/items' ,$img_detail['src']);
 						$main = 0;
 		             }
-		             $msg = 'success';
+		             $msg = 'Item submitted succesfully';
 		             return $msg;
 		        }
 		        // for json response
@@ -165,8 +169,24 @@ class Admin extends BaseController
 
     //             return $this->response->setJSON($response);
 		}
+		else{
+			$this->response->setStatusCode(400);
+					
+			return  json_encode('Error: Data already found in other way');
 		}
-        echo view('admin/add_items');
+		}
+		$categories = $this->catg->find();
+		$brands = $this->brand->find();
+		$data = [
+			'brands' => $brands,
+			'categories' => $categories
+		];
+		// if(!$categories){
+		// dd($categories);
+		// exit();	
+		// }
+		
+        echo view('admin/add_items' , $data);
 
 	}
 	// ...........................................................................................
@@ -214,7 +234,7 @@ class Admin extends BaseController
 			if ($this->exists($req)) {
 				$this->session->set('id' , $req['id']);
 				// dd($this->session->get('id'));
-
+				// exit();
 				return redirect()->to('orders');
 			}
 			else{

@@ -1,6 +1,7 @@
-<?php namespace Config;
-// header('Access-Control-Allow-Origin: *');
-// header("Access-Control-Allow-Methods: GET, OPTIONS");
+<?php
+
+namespace Config;
+
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
 
@@ -23,7 +24,7 @@ $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(false);
 
-/**
+/*
  * --------------------------------------------------------------------
  * Route Definitions
  * --------------------------------------------------------------------
@@ -31,9 +32,11 @@ $routes->setAutoRoute(false);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-
 $routes->get('/', 'Customers::index');
-$routes->get('/(:alpha)',  'Customers::spesific_items/$1');
+$routes->get('home', 'Customers::home');
+$routes->get('banner', 'Customers::banner');
+
+$routes->get('items/(:alpha)',  'Customers::items/$1');
 
 
 // testing uri
@@ -44,7 +47,8 @@ $routes->match(['get', 'post'], 'admin/login', 'Admin::login' , ['filter' => 'Lo
 
 
 // admin api's
-$routes->group('admin' , ['filter' => 'Auth'] ,  function($routes){
+// $routes->group('admin' , ['filter' => 'Auth'] ,  function($routes){
+$routes->group('admin' ,  function($routes){
 	
 	// create migrations
 	$routes->get('migrate', 'Migrate::index');
@@ -56,6 +60,7 @@ $routes->group('admin' , ['filter' => 'Auth'] ,  function($routes){
 	$routes->match(['get', 'post'], 'myprofile', 'Admin::my_profile');
 
 	// otherroutes
+	$routes->post('add_catg', 'Admin::add_catg');
 	$routes->match(['get', 'post'], 'add_items', 'Admin::add_items');
 	$routes->get('orders', 'Admin::orders');
 	$routes->get('order_preview', 'Admin::order_preview');
@@ -72,9 +77,11 @@ $routes->get( 'item_detail', 'Customers::item_detail');
 $routes->match(['get', 'post'], 'order_book', 'Customers::order_book');
 $routes->get('items' , 'Customers::items');
 
+$routes->match(['get', 'post'], 'abc', 'Testing::index');
+$routes->match(['get', 'post'], 'abchome', 'Testing::home');
+$routes->match(['get', 'post'], 'abcnav', 'Testing::navbar');
 
-
-/**
+/*
  * --------------------------------------------------------------------
  * Additional Routing
  * --------------------------------------------------------------------

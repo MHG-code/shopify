@@ -30,76 +30,41 @@ class Customers extends BaseController
 	}
 	public function index()
 	{
+		$base =  $this->base();
+
+		// echo view('customers/index' , ['categories'=>$base['categories'] , 'profile'=> $base['profile']]);
+		echo view('customers/index' , ['categories'=>$base['categories']]);
+
+	}
+
+	public function home(){
+
 		$count =  $this->item->countAllResults();
 
 		$base =  $this->base();
 
-		$items = $this->item->get_all_items($count);
+		if ($count > 0) {
+			$items = $this->item->get_all_items($count);
 
-		$data = [
-			'items' => $items ,
-			'pager' =>  $this->item->pager
-		];
-		// dd($data);
-		// exit();
-		echo view('customers/index' , ['items'=>$data, 'categories'=>$base['categories'] , 'profile'=> $base['profile']]);
-		// echo view('testing2' , ['items'=>$data, 'categories'=>$base['categories'] , 'profile'=> $base['profile']]);
+			$data = [
+				'items' => $items ,
+				'pager' =>  $this->item->pager
+			];
+			return view('customers/loaded_page/home' , ['categories'=>$base['categories'] ,'items'=>$data]);
+		}
+		else
+		{
+			$this->response->setStatusCode(400);
+		}
 		
-
 	}
 
-	// public function items(){
-	// 	$items = $this->item->get_all_items();
+	public function banner(){
+		
+		return view('customers/loaded_page/home_banner');
+	}
 
-	// 	$data = [
-	// 		'items' => $items ,
-	// 		'pager' =>  $this->item->pager
-	// 	];
-
-	// 	foreach ($data['items'] as $item) {
-	// 		echo '<div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">';
-	// 			echo '<div class="product py-4">';
-
-	// 				echo '<span class="off bg-success">-'.$item["discount"].'% OFF</span>';
-	// 				echo '<a class="detail" id="detail"
-	// 				data-title='.$item["title"].
-	// 				'data-src='.$item["src"].
-	// 				'data-price='.$item["price"].
-	// 				'data-discount='.$item["discount"].
-	// 				'data-id='.$item["_id"].
-	// 				'data-quantity=1';
-
-	// 				echo '<div class="text-center">';
-	// 					echo '<img src="'.base_url('uploads/items/' .$item['src']). '">';
-	// 				echo '</div>';
-	// 				echo '</a>';
-
-	// 				echo '<div class="about text-center">';
-	// 					echo '<h5>'.$item['title'] .'</h5>';
-	// 					echo '<span>'. $item['price']. ' PKR</span>';
-	// 				echo '</div>';
-
-	// 				echo '<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">';
-	// 					echo '<button class="btn btn-outline-success text-uppercase add-cart" id="add-cart"
-	// 						data-title=' .$item["title"].
-	// 						'data-src=' .$item["src"].
-	// 						 'data-price=' .$item["price"].
-	// 						 'data-discount=' .$item["discount"].
-	// 						 'data-id=' .$item["_id"].
-	// 						 'data-quantity="1"
-	// 						 >Add to cart</button>';
-	// 				echo '</div>';
-	// 			echo '</div>';
-	// 		echo '</div>';	
-	// 	}
-
-	// 	echo '<div class="pager">';
-	// 		echo $data['pager']->links('default' , 'pager_style');
-	// 	echo '</div>';
-
-	// }
-
-	public function spesific_items($catg){
+	public function items($catg){
 		$base =  $this->base();
 
 		$items = $this->item->get_specific_items($catg);
@@ -108,8 +73,9 @@ class Customers extends BaseController
 			'items' => $items ,
 			'pager' =>  $this->item->pager
 		];
-		// dd($categories);
-		echo view('customers/home' , ['items'=>$data, 'categories'=>$base['categories'] , 'profile'=> $base['profile']]);
+
+		return view('customers/loaded_page/items' , ['items'=>$data, 'categories'=>$base['categories'] , 'profile'=> $base['profile']]);
+
 	}
 	
 	public function add_cart()
@@ -126,7 +92,7 @@ class Customers extends BaseController
 		$data['items'] = $this->item->get_item($req);
 		$data['imgs'] = $this->image->get_item_images($req);
 		
-		echo view('customers/loaded_page/item_detail' , ['imgs'=> $data['imgs'], 'items'=>$data['items']] );
+		return view('customers/loaded_page/item_detail' , ['imgs'=> $data['imgs'], 'items'=>$data['items']] );
 	}
 
 	public function order_book()

@@ -18,7 +18,13 @@ class Category extends Migration
 								'type'       => 'VARCHAR',
 								'constraint' => 50,
 								'null'       => false
-							],                             
+							],
+
+                        'description' => [
+                                                                'type'       => 'VARCHAR',
+                                                                'constraint' => 250,
+                                                                'null'       => false
+                                                        ],                            
                         'created_at'          => [
                                 'type'           => 'DATETIME',
                                 'null'       => false,

@@ -81,7 +81,8 @@ body {
 <div id="mySidebar" class="sidebar">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
   <a href="<?= base_url() ?>/admin/orders" class="active"">Order's</a>
-  <a href="<?= base_url() ?>/admin/add_items">Add Items</a>
+  <a href="<?= base_url() ?>/admin/add_items">add Items</a>
+  <a href="<?= base_url() ?>/admin/items">show all items</a>
   <a href="">Order's Deliver</a>
   <a href="">Order's Complete</a>
   <a href="#">Customers</a>
